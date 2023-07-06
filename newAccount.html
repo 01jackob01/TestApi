@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodaj konto</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="frontExtensions/css/bootstrap.min.css"/>
+    <script src="js/shared/sharedScripts.js" type="module"></script>
+    <script src="js/newAccount.js" type="module"></script>
+    <script src="frontExtensions/js/vue.js"></script>
+    <script src="frontExtensions/js/jquery.min.js"></script>
+    <script src="frontExtensions/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="newAccount">
+    <div id="loader" class="overlay">
+        <div class="loaderPosition">
+            <div class="loader"></div>
+        </div>
+    </div>
+    <div class="window">
+        <h2>Nowe konto</h2>
+        <p>Wprowadź dane do konta</p>
+
+        <div class="form-group">
+            <input v-model="login" id ="login" placeholder="Login" type="text" name="login" class="form-control">
+        </div>
+        <div class="form-group">
+            <input v-model="password" id="password" placeholder="Hasło" type="password" name="password" class="form-control">
+        </div>
+        <br>
+        <div class="form-group fullCenter">
+            <input @click="createNewAccount" type="button" class="btn btn-primary" value="Dodaj konto">
+        </div>
+        <div v-if="createError">
+            <br>
+            <div class="alertInfo alert alert-danger">{{ createError }}</div>
+        </div>
+        <div v-if="createSuccess">
+            <br>
+            <div class="alertInfo alert alert-info">{{ createSuccess }}</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

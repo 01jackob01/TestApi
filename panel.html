@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel użytkownika</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="frontExtensions/css/bootstrap.min.css"/>
+    <script src="js/shared/sharedScripts.js" type="module"></script>
+    <script src="js/panel.js" type="module"></script>
+    <script src="frontExtensions/js/vue.js"></script>
+    <script src="frontExtensions/js/jquery.min.js"></script>
+    <script src="frontExtensions/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="panel">
+    <div id="loader" class="overlay">
+        <div class="loaderPosition">
+            <div class="loader"></div>
+        </div>
+    </div>
+    <table class="table table-bordered table-sm table-striped m-10px">
+        <tr>
+            <td class="align-middle">
+                Użytkownik: {{ userLogin }}
+            </td>
+            <td>
+                <div class="buttonRight">
+                    <button type="button" class="btn btn-secondary" @click="logoutSystem">Wyloguj</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table id="ordersAll" class="table table-bordered table-sm table-striped m-10px" @click="showSegment">
+        <tr>
+            <th class="text-center">
+                Wszystkie zamówienia
+            </th>
+        </tr>
+    </table>
+    <table id="ordersAllToShow" class="table table-bordered table-sm table-striped m-10px" style="display: none;">
+        <tr>
+            <th>Data zamówienia</th>
+            <th>Login</th>
+            <th>Produkt</th>
+            <th>Ilość</th>
+            <th>Cena</th>
+        </tr>
+        <tr>
+
+        </tr>
+    </table>
+    <table id="addProduct" class="table table-bordered table-sm table-striped m-10px" @click="showSegment">
+        <tr>
+            <th class="text-center">
+                Dodaj produkt
+            </th>
+        </tr>
+    </table>
+    <table id="addProductToShow" class="table table-bordered table-sm table-striped m-10px" style="display: none;">
+        <tr>
+            <th>
+                Użytkownik:
+            </th>
+            <th>
+                <select v-model="login" id ="login" name="login" class="form-control">
+            </th>
+        </tr>
+        <tr>
+            <th class="form-group fullCenter">
+                <input @click="createNewAccount" type="button" class="btn btn-primary" value="Dodaj konto">
+            </th>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
