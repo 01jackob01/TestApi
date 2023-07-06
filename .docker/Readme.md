@@ -16,7 +16,7 @@
 
 # Instalacja projektu
 
-1. ``docker build -t apache_eco_flow .``
+1. ``docker build -t apache_api_test .``
 2. ``docker-compose up -d ``
 
 # Odpalenie localhost
