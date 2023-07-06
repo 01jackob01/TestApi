@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $postData = (array)json_decode(file_get_contents('php://input'));
     if (checkApp($postData)) {
         $id = getIdFromUrl();
-        if (!empty($id)) {
+        if (!empty($id) && !is_int($id)) {
             if (!empty($postData['c']) && !empty($postData['f'])) {
                 $postData['id'] = $id;
                 $className = 'Api\\Classes\\' . $postData['c'];
