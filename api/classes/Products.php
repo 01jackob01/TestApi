@@ -27,7 +27,7 @@ class Products extends AppAbstract
 
     public function updateProduct(): array
     {
-        if (!empty($this->requestData['productId'])) {
+        if (!empty($this->requestData['id'])) {
             $update = [];
             $productModel = new ProductModel();
             if ($this->requestData['name']) {
