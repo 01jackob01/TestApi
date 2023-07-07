@@ -12,6 +12,13 @@ class OrdersModel extends DbConnector
     public const COLUMN_SUM_PRICE = 'sum_price';
     public const COLUMN_CREATE_TIME = 'create_time';
 
+    public function getOrderById(int $orderId): array
+    {
+        $order =  $this->select(2, ['*'], self::TABLE, ['=' => [self::COLUMN_ID => $orderId]]);
+
+        return !empty($order) ? $order : [];
+    }
+
     public function getAllOrdersBetweenDate(string $startDate = '', string $endDate = ''): array
     {
         $where = [];
@@ -34,6 +41,18 @@ class OrdersModel extends DbConnector
             $return = ['addOrder' => true];
         } else {
             $return = ['addOrder' => false];
+        }
+
+        return $return;
+    }
+
+    public function updateOrder(array $data, int $id): array
+    {
+        $update =  $this->update(self::TABLE, $data, ['=' => [self::COLUMN_ID => $id]]);
+        if ($update) {
+            $return = ['updateOrder' => true];
+        } else {
+            $return = ['updateOrder' => false];
         }
 
         return $return;

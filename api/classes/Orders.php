@@ -39,6 +39,53 @@ class Orders extends AppAbstract
 
         return $return;
     }
+
+    public function updateOrder(): array
+    {
+        if (!empty($this->requestData['id'])) {
+            $update = [];
+            $ordersModel = new OrdersModel();
+            $productModel = new ProductModel();
+            if ($this->requestData['productId']) {
+                $update[$ordersModel::COLUMN_PRODUCT_ID] = $this->requestData['productId'];
+            }
+            if ($this->requestData['userId']) {
+                $update[$ordersModel::COLUMN_USER_ID] = $this->requestData['userId'];
+            }
+            if ($this->requestData['quantity']) {
+                $update[$ordersModel::COLUMN_QUANTITY] = $this->requestData['quantity'];
+            }
+            if ($this->requestData['sumPrice']) {
+                $update[$ordersModel::COLUMN_SUM_PRICE] = $this->requestData['sumPrice'];
+            }
+            $orderData = $ordersModel->getOrderById($this->requestData['id']);
+            if (!empty($orderData)) {
+                $quantityToChange = $orderData['quantity'] - $this->requestData['quantity'];
+                $productData = $productModel->getProduct($orderData['product_id']);
+                $productData = reset($productData);
+                $productQuantityAfterUpdate = $productData['quantity'] + $quantityToChange;
+                if ($productQuantityAfterUpdate >= 0 || empty($productData)) {
+                    if (!empty($update)) {
+                        $return = $ordersModel->updateOrder($update, $this->requestData['id']);
+                        if (!empty($productData)) {
+                            $productModel->updateProduct(['quantity' => $productQuantityAfterUpdate], $productData['id']);
+                        }
+                    } else {
+                        $return = ['error' => true, 'message' => 'Brak danych do aktualizacji'];
+                    }
+                } else {
+                    $return = ['error' => true, 'message' => 'Brak wystarczajacej ilosci produktow do zmiany'];
+                }
+            } else {
+                $return = ['error' => true, 'message' => 'Brak zamowienia o id'];
+            }
+
+        } else {
+            $return = ['error' => true, 'message' => 'Id zamowienia jest puste'];
+        }
+
+        return $return;
+    }
     public function getAllOrders(): array
     {
         $startDate = '';
@@ -57,6 +104,16 @@ class Orders extends AppAbstract
     public function deleteOrder(): array
     {
         $ordersModel = new OrdersModel();
+        $productModel = new ProductModel();
+
+        $orderData = $ordersModel->getOrderById($this->requestData['id']);
+        $productData = $productModel->getProduct($orderData['product_id']);
+        $productData = reset($productData);
+        if (!empty($productData)) {
+            $quantity = $productData['quantity'] + $orderData['quantity'];
+            $productModel->updateProduct(['quantity' => $quantity], $productData['id']);
+        }
+
         return $ordersModel->deleteOrder($this->requestData['id']);
     }
 }

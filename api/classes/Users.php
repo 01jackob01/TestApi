@@ -2,12 +2,12 @@
 
 namespace Api\Classes;
 
+use Api\Model\ApiKeysModel;
 use Api\Model\SessionModel;
 use Api\Model\UsersModel;
 
 class Users extends AppAbstract
 {
-
     public function getAllUsers()
     {
         $usersModel = new UsersModel();
@@ -62,6 +62,12 @@ class Users extends AppAbstract
     public function deleteUser()
     {
         $userModel = new UsersModel();
+        $apiKeysModel = new ApiKeysModel();
+        $apiKeyId = $apiKeysModel->getApiKeyIdForUser($this->requestData['id']);
+        if ($apiKeyId > 0) {
+            $apiKeysModel->deleteApiKey($apiKeyId);
+        }
+
         return $userModel->deleteUser($this->requestData['id']);
     }
 }

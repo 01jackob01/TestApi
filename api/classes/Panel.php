@@ -4,6 +4,7 @@ namespace Api\Classes;
 
 use Api\Model\ApiKeysModel;
 use Api\Model\SessionModel;
+use Api\Model\UsersModel;
 
 class Panel extends AppAbstract
 {
@@ -41,5 +42,34 @@ class Panel extends AppAbstract
         }
 
         return $check;
+    }
+
+    public function createApiKeyForUser()
+    {
+        $userModel = new UsersModel();
+        $userData = $userModel->getAccountDataById($this->requestData['userId']);
+        if (!empty($userData)) {
+            $apiKeysModel = new ApiKeysModel();
+            $apiKeyId = $apiKeysModel->getApiKeyIdForUser($this->requestData['userId']);
+            if ($apiKeyId === 0) {
+                $apiKey = hash('sha256', self::SALT . $userData['login'] . '-' . $_ENV['API_KEY']);
+                $insert = [
+                    $apiKeysModel::COLUMN_USER_ID => $userData['id'],
+                    $apiKeysModel::COLUMN_API_KEY => $apiKey,
+                ];
+                $apiKeyInsert = $apiKeysModel->createApiKey($insert);
+                if ($apiKeyInsert) {
+                    $return = ['apiKey' => $userData['login'] . '-' . $_ENV['API_KEY']];
+                } else {
+                    $return = ['apiKey' => false];
+                }
+            } else {
+                $return = ['error' => true, 'message' => 'Uzytkownik ma juz api key'];
+            }
+        } else {
+            $return = ['error' => true, 'message' => 'Uzytkownik o wskazanym id nie istnieje'];
+        }
+
+        return $return;
     }
 }

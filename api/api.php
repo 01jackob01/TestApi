@@ -13,9 +13,9 @@ if (!empty($_GET)) {
 } else {
     $data = (array)json_decode(file_get_contents('php://input'));
 }
-$postMethod = ['loginToPanel', 'createNewAccount', 'addNewProduct', 'createOrder'];
+$postMethod = ['loginToPanel', 'createNewAccount', 'addNewProduct', 'createOrder', 'createApiKeyForUser'];
 $getMethod = ['checkPage', 'getUserLogin', 'logoutFromPanel', 'getAllUsers', 'getProducts', 'getAllOrders'];
-$putMethod = ['updateUser', 'updateProduct'];
+$putMethod = ['updateUser', 'updateProduct', 'updateOrder'];
 $deleteMethod = ['deleteProduct', 'deleteOrder', 'deleteUser'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && in_array($data['f'], $postMethod)) {

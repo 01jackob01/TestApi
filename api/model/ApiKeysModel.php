@@ -16,4 +16,35 @@ class ApiKeysModel extends DbConnector
 
         return !empty($keyData) ? $keyData : [];
     }
+
+    public function getApiKeyIdForUser(int $userId): int
+    {
+        $apiKeyId = $this->select(0, [self::COLUMN_ID], self::TABLE, ['=' => [self::COLUMN_USER_ID => $userId]]);
+
+        return !empty($apiKeyId) ? $apiKeyId : 0;
+    }
+
+    public function deleteApiKey(int $id)
+    {
+        $delete =  $this->delete(self::TABLE, ['=' => [self::COLUMN_ID => $id]]);
+        if ($delete) {
+            $return = ['deleteSession' => true];
+        } else {
+            $return = ['deleteSession' => false];
+        }
+
+        return $return;
+    }
+
+    public function createApiKey(array $data): array
+    {
+        $delete =  $this->insert(self::TABLE, $data);
+        if ($delete) {
+            $return = ['apiKey' => true];
+        } else {
+            $return = ['apiKey' => false];
+        }
+
+        return $return;
+    }
 }

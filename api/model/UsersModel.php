@@ -50,9 +50,9 @@ class UsersModel extends DbConnector
             $return = ['addNewUser' => true];
         } else {
             if (!empty($this->getAccountDataByLogin($login))) {
-                $return = ['addNewUser' => false, 'message' => 'Konto już istnieje w systemie'];
+                $return = ['addNewUser' => false, 'message' => 'Konto juz istnieje w systemie'];
             } else {
-                $return = ['addNewUser' => false, 'message' => 'Wystąpił błąd podczas dodawania'];
+                $return = ['addNewUser' => false, 'message' => 'Wystąpil blad podczas dodawania'];
             }
         }
 
