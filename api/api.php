@@ -73,7 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && in_array($data['f'], $postMethod)) {
         $return = ['error' => true, 'message' => 'Blad polaczenia api'];
     }
 } else {
-    $return = ['error' => true, 'message' => 'Bledny requqst method'];
+    if (empty($data['f'])) {
+        $return = ['error' => true, 'message' => 'Brak wymaganego parametru'];
+    } else {
+        $return = ['error' => true, 'message' => 'Bledny request method'];
+    }
 }
 
 echo json_encode($return);
