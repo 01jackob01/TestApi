@@ -8,7 +8,17 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (isset($_GET)) {
+    $data = $_GET;
+} else {
+    $data = (array)json_decode(file_get_contents('php://input'));
+}
+$postMethod = ['loginToPanel', 'createNewAccount', 'addNewProduct', 'createOrder'];
+$getMethod = ['checkPage', 'getUserLogin', 'logoutFromPanel', 'getAllUsers', 'getProducts', 'getAllOrders'];
+$putMethod = ['updateUser', 'updateProduct'];
+$deleteMethod = ['deleteProduct', 'deleteOrder', 'deleteUser'];
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && in_array($data['f'], $postMethod)) {
     $postData = (array)json_decode(file_get_contents('php://input'));
     if (!in_array($postData['c'], ['NewAccount', 'Login'])) {
         $pageCheck = checkApp($postData);
@@ -27,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $return = ['error' => true, 'message' => 'Blad polaczenia api'];
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+} elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && in_array($data['f'], $getMethod)) {
     if (checkApp($_GET)) {
         if (!empty($_GET['c']) && !empty($_GET['f'])) {
             $className = 'Api\\Classes\\' . $_GET['c'];
@@ -40,7 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $return = ['error' => true, 'message' => 'Blad polaczenia api'];
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE' || $_SERVER['REQUEST_METHOD'] == 'PUT') {
+} elseif (($_SERVER['REQUEST_METHOD'] == 'DELETE' && in_array($data['f'], $deleteMethod))
+    || ($_SERVER['REQUEST_METHOD'] == 'PUT' && in_array($data['f'], $putMethod))
+) {
     $postData = (array)json_decode(file_get_contents('php://input'));
     if (checkApp($postData)) {
         $id = getIdFromUrl();
