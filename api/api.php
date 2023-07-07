@@ -8,7 +8,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-if (isset($_GET)) {
+if (!empty($_GET)) {
     $data = $_GET;
 } else {
     $data = (array)json_decode(file_get_contents('php://input'));
