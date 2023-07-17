@@ -218,11 +218,7 @@ SQL;
 
         if($result && $this->numRows($result) > 0) {
             while ($row = $result->fetch_assoc()) {
-                if (!empty($row['id']) && !isset($data[$row['id']])) {
-                    $data[$row['id']] = $row;
-                } else {
-                    $data[] = $row;
-                }
+                $data[] = $row;
             }
         }
 
